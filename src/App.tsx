@@ -23,7 +23,7 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Auth} />
-            <Route exact path="employees" component={MainPage} />
+            <Route exact path="/employees" component={MainPage} />
           </Switch>
         </BrowserRouter>
       </div>
