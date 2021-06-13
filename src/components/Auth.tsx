@@ -22,6 +22,7 @@ const Auth = withRouter(() => { // routerをTypecSriptで利用するために�
           variables: { username: username, password: password },
         });
         localStorage.setItem("token", result.data.tokenAuth.token);
+        console.log(`result.data.tokenAuth.token`, result.data.tokenAuth.token)
         result.data.tokenAuth.token && (window.location.href = "/employees");
       } catch (err) {
         alert(err.message);
@@ -74,18 +75,18 @@ const Auth = withRouter(() => { // routerをTypecSriptで利用するために�
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-      </form>
-      <button type="submit">
-        {isLogin ? "Login with JWT" : "Create new user"}
-      </button>
-      <div>
-        <FlipCameraAndroidIcon 
-          className={styles.auth__toggle}
-          onClick={() => {setIsLogin(!isLogin)}}
-        />
-      </div>
 
-      
+        <button type="submit">
+          {isLogin ? "Login with JWT" : "Create new user"}
+        </button>
+
+        <div>
+          <FlipCameraAndroidIcon
+            className={styles.auth__toggle}
+            onClick={() => setIsLogin(!isLogin)}
+          />
+        </div>
+      </form>
     </div>
   )
 });
