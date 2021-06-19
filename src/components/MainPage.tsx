@@ -5,9 +5,9 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { GET_DEPTS, GET_EMPLOYEES } from "../queries";
 import { Grid } from "@material-ui/core";
 import jwtDecode, { JwtPayload } from "jwt-decode";
-// import EmployeeList from "./EmployeeList";
+import EmployeeList from "./EmployeeList";
 // import EmployeeCreate from "./EmployeeCreate";
-// import EmployeeDetails from "./EmployeeDetails";
+import EmployeeDetails from "./EmployeeDetails";
 // import DeptList from "./DeptList";
 // import FilterByName from "./FilterByName";
 // import FilterByAnd from "./FilterByAnd";
@@ -22,20 +22,31 @@ const MainPage = withRouter(() => {
     error: errorDepts,
   } = useQuery(GET_DEPTS);
 
+  console.log(`loadingDepts: `,loadingDepts);
+  console.log(`dataDepts: `,dataDepts);
+  console.log(`errorDepts: `,errorDepts);
+
   const {
     loading: loadingEmployees,
     data: dataEmployees,
     error: errorEmployees,
   } = useQuery(GET_EMPLOYEES);
 
+  console.log(`loadingEmployees: `,loadingEmployees);
+  console.log(`dataEmployees: `,dataEmployees);
+  console.log(`errorEmployees: `,errorEmployees);
+
+  // error が発生したら、localStorageに保存されているtokenを削除する
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
     if (currentToken) {
       const decodedToken: JwtPayload = jwtDecode(currentToken);
       if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+        // 有効期限がきれりたら削除
         localStorage.removeItem("token");
       }
     } else {
+      // そもそもtokenが存在しな場合はauthのルートに遷移させる
       window.location.href = "/";
     }
   }, [errorEmployees, errorDepts]);
@@ -61,8 +72,31 @@ const MainPage = withRouter(() => {
           }}
         />
       </h1>
+      <Grid container>
+        <Grid item xs={5}>
+          <EmployeeList dataEmployees={dataEmployees} />
+        </Grid>
+        <Grid item xs={4}>
+          <EmployeeDetails />
+        </Grid>
+        {/* <Grid item xs={3}>
+          <DeptList dataDepts={dataDepts} />
+        </Grid> */}
+      </Grid>
+      {/* <Grid container>
+        <Grid item xs={2}>
+          <FilterByName />
+        </Grid>
+        <Grid item xs={3}>
+          <FilterByAnd />
+        </Grid>
+        <Grid item xs={7}>
+          <Pagination />
+        </Grid>
+      </Grid> */}
+
     </div>
   );
 });
 
-export default MainPage
+export default MainPage;
